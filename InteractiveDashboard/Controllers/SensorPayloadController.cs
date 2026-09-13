@@ -152,6 +152,27 @@ namespace InteractiveDashboard.Controllers
 
             return RedirectToAction(nameof(Details), new { id = sensor.Id });
         }
+        [HttpGet]
+        public async Task<IActionResult> Add(int id1, int id2)
+        {
+            var sensor1 = await _context.SensorPayloads.FindAsync(id1);
+            var sensor2 = await _context.SensorPayloads.FindAsync(id2);
+
+            if (sensor1 == null || sensor2 == null)
+            {
+                return NotFound();
+            }
+
+            var result = sensor1 + sensor2;
+
+            ViewBag.Result = result.SensorValue;
+            ViewBag.Operation = "Addition";
+            ViewBag.Sensor1 = sensor1.SensorValue;
+            ViewBag.Sensor2 = sensor2.SensorValue;
+
+            return View("Calculation");
+        }
+
 
     }
 }
