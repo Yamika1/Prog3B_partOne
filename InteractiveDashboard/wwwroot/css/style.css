@@ -121,7 +121,7 @@ body {
 
 .dashboard-charts {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 20px;
     margin-bottom: 35px;
 }
@@ -142,8 +142,7 @@ body {
         font-weight: 700;
     }
 
-#bar-chart,
-#area-chart {
+#bar-chart {
     width: 100%;
     min-height: 350px;
 }
@@ -289,7 +288,6 @@ body {
 
 @media screen and (max-width: 1200px) {
 
-   
     .main-cards {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -297,13 +295,10 @@ body {
     .dashboard-charts {
         grid-template-columns: 1fr;
     }
-
-   
 }
 
 @media screen and (max-width: 768px) {
 
-    
     .dashboard-container {
         padding: 25px 15px;
     }
@@ -356,13 +351,10 @@ body {
         width: 100%;
         justify-content: center;
     }
-
-    
 }
 
 @media screen and (max-width: 576px) {
 
-    
     .dashboard-header {
         align-items: flex-start;
         flex-direction: column;
@@ -390,14 +382,11 @@ body {
         min-height: 360px;
     }
 
-    #bar-chart,
-    #area-chart {
+    #bar-chart {
         min-height: 300px;
     }
 
     .sensor-table-card {
         padding: 18px;
     }
-
-    
 }
