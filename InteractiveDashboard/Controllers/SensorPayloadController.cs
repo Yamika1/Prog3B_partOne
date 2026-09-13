@@ -75,6 +75,83 @@ namespace InteractiveDashboard.Controllers
 
             return View(sensor);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(int id, IFormFile file)
+        {
+            var sensor = await _context.SensorPayloads
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (sensor == null)
+            {
+                return NotFound();
+            }
+
+            if (file == null || file.Length == 0)
+            {
+                ModelState.AddModelError("file", "Please select a file.");
+                return View(sensor);
+            }
+
+            var allowedExtensions = new[]
+            {
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".pdf",
+        ".doc",
+        ".docx"
+    };
+
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!allowedExtensions.Contains(extension))
+            {
+                ModelState.AddModelError(
+                    "file",
+                    "Only JPG, JPEG, PNG, GIF, PDF, DOC and DOCX files are allowed.");
+
+                return View(sensor);
+            }
+
+            var uploadsFolder = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "uploads",
+                "sensors");
+
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var uniqueFileName = Guid.NewGuid().ToString() + extension;
+
+            var filePath = Path.Combine(
+                uploadsFolder,
+                uniqueFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var sensorFile = new SensorPayloadFile
+            {
+                FileName = file.FileName,
+                FilePath = "/uploads/sensors/" + uniqueFileName,
+                FileSize = file.Length,
+                UploadedDate = DateTime.Now,
+                SensorPayloadId = sensor.Id
+            };
+
+            _context.SensorPayloadFiles.Add(sensorFile);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = sensor.Id });
+        }
 
     }
 }
