@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InteractiveDashboard.Controllers
 {
-    public class SensorPayloadController : Controller
+    public class SensorPayloadsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SensorPayloadController(ApplicationDbContext context)
+        public SensorPayloadsController(ApplicationDbContext context)
         {
             _context = context;
         }
