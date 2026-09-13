@@ -1,0 +1,194 @@
+@model List<InteractiveDashboard.Models.SensorPayload>
+
+@{
+    ViewData["Title"] = "Sensor Dashboard";
+}
+
+<div class="container-fluid">
+
+    
+    <div class="main-title">
+        <h2>SENSOR DASHBOARD</h2>
+        <p>Monitor and manage your sensor payloads.</p>
+    </div>
+
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-action="Create" class="btn btn-success">
+            Add Sensor
+        </a>
+    </div>
+
+    <div class="main-cards">
+
+        <div class="card">
+            <div class="card-inner">
+                <h3>TOTAL SENSORS</h3>
+                <span class="material-icons-outlined">sensors</span>
+            </div>
+            <h1>@Model.Count</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-inner">
+                <h3>CATEGORIES</h3>
+                <span class="material-icons-outlined">category</span>
+            </div>
+            <h1>@Model.Select(x => x.Category).Distinct().Count()</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-inner">
+                <h3>LOCATIONS</h3>
+                <span class="material-icons-outlined">location_on</span>
+            </div>
+            <h1>@Model.Select(x => x.Deployment_Location).Distinct().Count()</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-inner">
+                <h3>ALERTS</h3>
+                <span class="material-icons-outlined">notification_important</span>
+            </div>
+            <h1>0</h1>
+        </div>
+
+    </div>
+
+    <div class="charts">
+
+        <div class="charts-card">
+            <h2 class="chart-title">Sensor Payloads</h2>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>Device ID</th>
+                            <th>MAC Address</th>
+                            <th>Deployment Location</th>
+                            <th>Category</th>
+                            <th>Sensor Value</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    @item.DeviceID
+                                </td>
+
+                                <td>
+                                    @item.MAC_Address
+                                </td>
+
+                                <td>
+                                    @item.Deployment_Location
+                                </td>
+
+                                <td>
+                                    @item.Category
+                                </td>
+
+                                <td>
+                                    @item.SensorValue
+                                </td>
+
+                                <td>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-primary">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-info">
+                                        Details
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-danger">
+                                        Delete
+                                    </a>
+
+                                    <a asp-action="Add"
+                                       asp-route-id1="@item.Id"
+                                       asp-route-id2="2"
+                                       class="btn btn-sm btn-success">
+                                        Add
+                                    </a>
+
+                                    <a asp-action="Subtract"
+                                       asp-route-id1="@item.Id"
+                                       asp-route-id2="2"
+                                       class="btn btn-sm btn-warning">
+                                        Subtract
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="charts-card">
+            <h2 class="chart-title">Sensor Overview</h2>
+
+            <div class="sensor-overview">
+
+                <div class="overview-item">
+                    <span class="material-icons-outlined">devices</span>
+                    <div>
+                        <h3>Devices</h3>
+                        <p>@Model.Select(x => x.DeviceID).Distinct().Count() Connected</p>
+                    </div>
+                </div>
+
+                <div class="overview-item">
+                    <span class="material-icons-outlined">sensors</span>
+                    <div>
+                        <h3>Sensor Readings</h3>
+                        <p>@Model.Count Recorded</p>
+                    </div>
+                </div>
+
+                <div class="overview-item">
+                    <span class="material-icons-outlined">location_on</span>
+                    <div>
+                        <h3>Deployment Locations</h3>
+                        <p>@Model.Select(x => x.Deployment_Location).Distinct().Count() Locations</p>
+                    </div>
+                </div>
+
+                <div class="overview-item">
+                    <span class="material-icons-outlined">category</span>
+                    <div>
+                        <h3>Sensor Categories</h3>
+                        <p>@Model.Select(x => x.Category).Distinct().Count() Categories</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+   
+
+</div>

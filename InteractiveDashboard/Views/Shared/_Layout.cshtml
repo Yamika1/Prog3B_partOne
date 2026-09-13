@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - InteractiveDashboard</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/InteractiveDashboard.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <input type="checkbox" id="nav-toggle">
+
+    <label class="toggle" for="nav-toggle">
+        <span class="top_line common"></span>
+        <span class="middle_line common"></span>
+        <span class="bottom_line common"></span>
+    </label>
+
+    <div class="slide">
+
+        <h1>MENU</h1>
+
+        <ul>
+
+            <li>
+                <a asp-controller="SensorPayloads" asp-action="Index">
+                    Sensor Payload
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="Real-TimeCommand" asp-action="Index">
+                   Real-Time Command Stream and History
+                </a>
+            </li>
+
+            <li>
+                <a asp-controller="NetworkTopology" asp-action="Index">
+                  Network Topology and Mesh Routing
+                </a>
+            </li>
+
+         
+        </ul>
+
+    </div>
+
+
+    @{
+        var isHome = ViewContext.RouteData.Values["controller"]?.ToString() == "Home"
+                     && ViewContext.RouteData.Values["action"]?.ToString() == "Index";
+
+        var isSensorPayload =
+            ViewContext.RouteData.Values["controller"]?.ToString() == "SensorPayload";
+
+        var isRealTimeCommand =
+            ViewContext.RouteData.Values["controller"]?.ToString() == "Real-TimeCommand";
+
+        var isNetworkToplogy =
+         ViewContext.RouteData.Values["controller"]?.ToString() == "NetworkTopology";
+
+     
+    }
+    <nav class="navbar">
+
+        <ul>
+
+            <li>
+                <a asp-controller="Home" asp-action="Index">
+           Home
+                </a>
+            </li>
+
+         
+
+            @if (!isHome)
+            {
+                <li>
+                    <a asp-controller="Home" asp-action="Index">
+                        Back to Home
+                    </a>
+                </li>
+            }
+
+        </ul>
+
+
+    </nav>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - InteractiveDashboard - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,135 @@
+@model InteractiveDashboard.Models.SensorPayload
+
+@{
+    ViewData["Title"] = "Sensor Details";
+}
+
+<div class="container mt-4">
+
+   
+    <h1>Sensor Details</h1>
+
+    <hr />
+
+    <dl class="row">
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.DeviceID)
+        </dt>
+
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.DeviceID)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.MAC_Address)
+        </dt>
+
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.MAC_Address)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Deployment_Location)
+        </dt>
+
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Deployment_Location)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+
+    </dl>
+
+    <hr />
+
+    <h3>Uploaded Files</h3>
+
+    @if (Model.Files != null && Model.Files.Any())
+    {
+        <div class="row">
+
+            @foreach (var file in Model.Files)
+            {
+                <div class="col-md-4 mb-4">
+
+                    <div class="card">
+
+                        @if (file.FileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                             file.FileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                             file.FileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                             file.FileName.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <img src="@file.FilePath"
+                                 class="card-img-top"
+                                 alt="@file.FileName"
+                                 style="height: 200px; object-fit: cover;" />
+                        }
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @file.FileName
+                            </h5>
+
+                            <p class="card-text">
+                                Size:
+                                @(Math.Round(file.FileSize / 1024.0, 2)) KB
+                            </p>
+
+                            <p class="card-text">
+                                Uploaded:
+                                @file.UploadedDate.ToString("dd/MM/yyyy HH:mm")
+                            </p>
+
+                            <a href="@file.FilePath"
+                               target="_blank"
+                               class="btn btn-primary">
+                                View File
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+    else
+    {
+        <p>No files have been uploaded for this sensor.</p>
+    }
+
+    <div class="mt-4">
+
+        <a asp-action="Edit"
+           asp-route-id="@Model?.Id"
+           class="btn btn-primary">
+            Edit
+        </a>
+
+        <a asp-action="Upload"
+           asp-route-id="@Model?.Id"
+           class="btn btn-success">
+            Upload File
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+   
+</div>
+
+

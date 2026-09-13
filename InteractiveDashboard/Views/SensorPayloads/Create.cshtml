@@ -1,0 +1,61 @@
+@model InteractiveDashboard.Models.SensorPayload
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>SensorPayload</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="DeviceID" class="control-label"></label>
+                <input asp-for="DeviceID" class="form-control" />
+                <span asp-validation-for="DeviceID" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MAC_Address" class="control-label"></label>
+                <input asp-for="MAC_Address" class="form-control" />
+                <span asp-validation-for="MAC_Address" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Deployment_Location" class="control-label"></label>
+                <input asp-for="Deployment_Location" class="form-control" />
+                <span asp-validation-for="Deployment_Location" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Category" class="control-label"></label>
+
+                <select asp-for="Category" class="form-control">
+                    <option value=""> Select Sensor Category </option>
+                    <option value="Temperature Sensors">Temperature Sensors</option>
+                    <option value="Pressure Sensors">Pressure Sensors</option>
+                    <option value="Touch Sensors">Touch Sensors</option>
+                    <option value="Proximity and Motion Sensors">Proximity and Motion Sensors</option>
+                </select>
+
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SensorValue" class="control-label"></label>
+                <input asp-for="SensorValue" class="form-control" />
+                <span asp-validation-for="SensorValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

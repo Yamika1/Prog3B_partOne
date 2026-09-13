@@ -1,0 +1,75 @@
+﻿@model InteractiveDashboard.Models.SensorPayload
+
+@{
+    ViewData["Title"] = "Upload File";
+}
+
+<div class="container mt-4">
+
+    
+    <h1>Upload File</h1>
+
+    <hr />
+
+    <div class="mb-4">
+        <h4>Sensor Information</h4>
+
+        <p>
+            <strong>Device ID:</strong>
+            @Model.DeviceID
+        </p>
+
+        <p>
+            <strong>MAC Address:</strong>
+            @Model.MAC_Address
+        </p>
+
+        <p>
+            <strong>Location:</strong>
+            @Model.Deployment_Location
+        </p>
+
+        <p>
+            <strong>Category:</strong>
+            @Model.Category
+        </p>
+    </div>
+
+    <form asp-action="Upload"
+          asp-route-id="@Model.Id"
+          method="post"
+          enctype="multipart/form-data">
+
+        <div class="form-group mb-3">
+
+            <label for="file" class="form-label">
+                Select File or Picture
+            </label>
+
+            <input type="file"
+                   name="file"
+                   id="file"
+                   class="form-control"
+                   accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx" />
+
+            <span class="text-danger">
+                @Html.ValidationMessage("file")
+            </span>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Upload
+        </button>
+
+        <a asp-action="Details"
+           asp-route-id="@Model.Id"
+           class="btn btn-secondary">
+            Cancel
+        </a>
+
+    </form>
+    
+
+</div>
+
