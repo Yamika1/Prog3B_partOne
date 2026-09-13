@@ -77,11 +77,10 @@ tooltip: {
 
 xaxis: {
     categories: [
-        'Temperature',
-        'Humidity',
-        'Pressure',
-        'Motion',
-        'Light'
+        'Temperature Sensors',
+        'Pressure Sensors',
+        'Touch Sensors',
+        'Proximity and Motion Sensors'
     ],
 
     axisBorder: {

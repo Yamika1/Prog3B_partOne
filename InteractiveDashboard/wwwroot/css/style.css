@@ -289,7 +289,7 @@ body {
 
 @media screen and (max-width: 1200px) {
 
-    ```
+   
     .main-cards {
         grid-template-columns: repeat(2, 1fr);
     }
