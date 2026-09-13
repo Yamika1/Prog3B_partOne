@@ -281,6 +281,12 @@ namespace InteractiveDashboard.Controllers
 
             return View("Calculation");
         }
+
+        private List <TelemetryPacket<T>> ProcessTelemetry<T>(
+            List<TelemetryPacket<T>> packets)
+        {
+            return packets.OrderBy(x => x.Timestamp).ToList();
+        }
         [HttpGet]
         public IActionResult GenericTelemetry()
         {
