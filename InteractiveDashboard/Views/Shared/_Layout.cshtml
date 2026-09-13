@@ -68,32 +68,7 @@
 
      
     }
-    <nav class="navbar">
-
-        <ul>
-
-            <li>
-                <a asp-controller="Home" asp-action="Index">
-           Home
-                </a>
-            </li>
-
-         
-
-            @if (!isHome)
-            {
-                <li>
-                    <a asp-controller="Home" asp-action="Index">
-                        Back to Home
-                    </a>
-                </li>
-            }
-
-        </ul>
-
-
-    </nav>
-
+ 
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
