@@ -60,7 +60,7 @@ namespace InteractiveDashboard.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(sensorpayload);
-        
+
         }
         [HttpGet]
         public async Task<IActionResult> Upload(int id)
@@ -173,6 +173,30 @@ namespace InteractiveDashboard.Controllers
             return View("Calculation");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Subtract(int id1, int id2)
+        {
+            var sensor1 = await _context.SensorPayloads.FindAsync(id1);
+            var sensor2 = await _context.SensorPayloads.FindAsync(id2);
 
+            if (sensor1 == null || sensor2 == null)
+            {
+                return NotFound();
+            }
+
+            var result = sensor1 - sensor2;
+
+            ViewBag.Result = result.SensorValue;
+            ViewBag.Operation = "Subtraction";
+            ViewBag.Sensor1 = sensor1.SensorValue;
+            ViewBag.Sensor2 = sensor2.SensorValue;
+
+            return View("Calculation");
+        }
+
+        private bool SensorPayloadExists(int? id)
+        {
+            return _context.SensorPayloads.Any(e => e.Id == id);
+        }
     }
 }
