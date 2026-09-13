@@ -44,8 +44,8 @@ namespace InteractiveDashboard.Controllers
 
             return 1 + CountSensors(sensors, index + 1);
         }
-        // GET: /Books/Add
-        public IActionResult Add()
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
