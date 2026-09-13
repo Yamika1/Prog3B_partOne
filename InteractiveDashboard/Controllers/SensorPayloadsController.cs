@@ -218,7 +218,21 @@ namespace InteractiveDashboard.Controllers
             return View(); 
         }
 
-     
+        private List<T> ConvertToList<T>(T[,] array)
+        {
+
+            List<T> result = new List<T>();
+
+            for (int row = 0; row < array.GetLength(0); row++)
+            {
+
+                for (int column = 0; column < array.GetLength(1); column++)
+                {
+                    result.Add(array[row, column]);
+                }
+            }
+            return result;
+        }
 
         [HttpGet]
         public async Task<IActionResult> Add(int id1, int id2)
