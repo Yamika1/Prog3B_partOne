@@ -204,6 +204,21 @@ namespace InteractiveDashboard.Controllers
                 nameof(Details),
                 new { id = sensor.Id });
         }
+        [HttpGet] public IActionResult Telemetry() { 
+            
+            double[,] rawTelemetryBatches = { 
+                { 12.4, 13.1, 14.2, 15.0 }, 
+{ 15.3, 16.1, 16.8, 17.2 }, 
+                { 18.0, 18.4, 19.1, 20.0 } }; 
+         
+            List<double> telemetryValues = ConvertToList(rawTelemetryBatches);
+         
+            ViewBag.TelemetryValues = telemetryValues; 
+          
+            return View(); 
+        }
+
+     
 
         [HttpGet]
         public async Task<IActionResult> Add(int id1, int id2)
