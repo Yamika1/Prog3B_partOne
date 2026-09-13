@@ -1,0 +1,124 @@
+﻿@model InteractiveDashboard.Models.SensorPayload
+
+@{
+    ViewData["Title"] = "Add Sensor";
+}
+
+<div class="container-fluid">
+
+    
+    <div class="main-title">
+        <div>
+            <h2>ADD SENSOR</h2>
+            <p>Enter the information for a new sensor.</p>
+        </div>
+    </div>
+
+    <div class="sensor-details-card">
+
+        <div class="details-header">
+            <span class="material-icons-outlined">sensors</span>
+            <h3>Sensor Information</h3>
+        </div>
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="details-grid">
+
+                <div class="form-group">
+                    <label asp-for="DeviceID" class="form-label">
+                        Device ID
+                    </label>
+
+                    <input asp-for="DeviceID"
+                           class="form-control"
+                           placeholder="Enter device ID" />
+
+                    <span asp-validation-for="DeviceID"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="MAC_Address" class="form-label">
+                        MAC Address
+                    </label>
+
+                    <input asp-for="MAC_Address"
+                           class="form-control"
+                           placeholder="Enter MAC address" />
+
+                    <span asp-validation-for="MAC_Address"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Deployment_Location" class="form-label">
+                        Deployment Location
+                    </label>
+
+                    <input asp-for="Deployment_Location"
+                           class="form-control"
+                           placeholder="Enter deployment location" />
+
+                    <span asp-validation-for="Deployment_Location"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Category" class="form-label">
+                        Category
+                    </label>
+
+                    <input asp-for="Category"
+                           class="form-control"
+                           placeholder="Enter sensor category" />
+
+                    <span asp-validation-for="Category"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SensorValue" class="form-label">
+                        Sensor Value
+                    </label>
+
+                    <input asp-for="SensorValue"
+                           class="form-control"
+                           type="number"
+                           step="any"
+                           placeholder="Enter sensor value" />
+
+                    <span asp-validation-for="SensorValue"
+                          class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="details-actions">
+
+                <button type="submit" class="btn btn-success">
+                    <span class="material-icons-outlined">add</span>
+                    Add Sensor
+                </button>
+
+                <a asp-action="Index"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+    
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

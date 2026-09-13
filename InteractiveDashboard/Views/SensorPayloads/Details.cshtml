@@ -1,0 +1,130 @@
+﻿@model InteractiveDashboard.Models.SensorPayload
+
+@{
+    ViewData["Title"] = "Sensor Details";
+}
+
+<div class="container-fluid">
+
+    <div class="main-title">
+        <div>
+            <h2>SENSOR DETAILS</h2>
+            <p>View the information recorded for this sensor.</p>
+        </div>
+    </div>
+
+    <div class="sensor-details-card">
+
+        <div class="details-header">
+            <span class="material-icons-outlined">sensors</span>
+            <h3>Sensor Information</h3>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="detail-item">
+                <span>Device ID</span>
+                <strong>@Model.DeviceID</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>MAC Address</span>
+                <strong>@Model.MAC_Address</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Deployment Location</span>
+                <strong>@Model.Deployment_Location</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Category</span>
+                <strong>@Model.Category</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Sensor Value</span>
+                <strong>@Model.SensorValue</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="sensor-details-card">
+
+        <div class="details-header">
+            <span class="material-icons-outlined">attach_file</span>
+            <h3>Uploaded Files</h3>
+        </div>
+
+        @if (Model.Files != null && Model.Files.Any())
+        {
+            <div class="uploaded-files">
+
+                @foreach (var file in Model.Files)
+                {
+                    <div class="file-item">
+
+                        <div>
+                            <span class="material-icons-outlined">
+                                description
+                            </span>
+
+                            <div>
+                                <strong>@file.FileName</strong>
+
+                                <p>
+                                    @((file.FileSize / 1024.0).ToString("0.00")) KB
+                                    |
+                                    @file.UploadedDate.ToString("dd/MM/yyyy HH:mm")
+                                </p>
+                            </div>
+                        </div>
+
+                        <a href="@file.FilePath"
+                           target="_blank"
+                           class="btn btn-sm btn-primary">
+                            View File
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <p class="no-files">
+                No files have been uploaded for this sensor.
+            </p>
+        }
+
+    </div>
+
+    <div class="details-actions">
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">
+            <span class="material-icons-outlined">edit</span>
+            Edit Sensor
+        </a>
+
+        <a asp-action="Upload"
+           asp-route-id="@Model.Id"
+           class="btn btn-success">
+            <span class="material-icons-outlined">upload_file</span>
+            Upload File
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            <span class="material-icons-outlined">arrow_back</span>
+            Back to Sensors
+        </a>
+
+    </div>
+   
+
+</div>
