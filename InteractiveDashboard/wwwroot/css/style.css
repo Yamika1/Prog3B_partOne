@@ -1,10 +1,16 @@
 ﻿body {
     margin: 0;
     padding: 0;
-    background-color: #1d2634;
+    background-image: url('/image/Screenshot 2026-09-12 111841.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
     color: #9e9ea4;
     font-family: 'Montserrat', sans-serif;
 }
+
 
 * {
     box-sizing: border-box;
@@ -292,7 +298,7 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    ```
+    
     .charts {
         grid-template-columns: 1fr;
     }
@@ -348,7 +354,7 @@
         font-size: 13px;
     }
 
-    ```
+   
 }
 
 @media screen and (max-width: 576px) {
