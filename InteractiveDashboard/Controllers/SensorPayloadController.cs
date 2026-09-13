@@ -152,6 +152,26 @@ namespace InteractiveDashboard.Controllers
 
             return RedirectToAction(nameof(Details), new { id = sensor.Id });
         }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var sensorPayload = await _context.SensorPayloads
+                .Include(x => x.Files)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (sensorPayload == null)
+            {
+                return NotFound();
+            }
+
+            return View(sensorPayload);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Add(int id1, int id2)
         {
