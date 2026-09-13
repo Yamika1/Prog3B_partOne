@@ -67,16 +67,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label asp-for="Category" class="form-label">
-                        Category
-                    </label>
+                    <label asp-for="Category" class="control-label"></label>
 
-                    <input asp-for="Category"
-                           class="form-control"
-                           placeholder="Enter sensor category" />
+                    <select asp-for="Category" class="form-control">
+                        <option value=""> Select Sensor Category </option>
+                        <option value="Temperature Sensors">Temperature Sensors</option>
+                        <option value="Pressure Sensors">Pressure Sensors</option>
+                        <option value="Touch Sensors">Touch Sensors</option>
+                        <option value="Proximity and Motion Sensors">Proximity and Motion Sensors</option>
+                    </select>
 
-                    <span asp-validation-for="Category"
-                          class="text-danger"></span>
+                    <span asp-validation-for="Category" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
