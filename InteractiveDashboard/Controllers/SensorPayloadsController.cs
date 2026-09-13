@@ -281,6 +281,39 @@ namespace InteractiveDashboard.Controllers
 
             return View("Calculation");
         }
+        [HttpGet]
+        public IActionResult GenericTelemetry()
+        {
+            List<TelemetryPacket<float>> temperaturePackets = new List<TelemetryPacket<float>>
+{
+new TelemetryPacket<float>(1, "Temperature", 22.5f),
+new TelemetryPacket<float>(1, "Temperature", 23.1f),
+new TelemetryPacket<float>(1, "Temperature", 24.3f)
+};
+
+List<TelemetryPacket<int>> powerPackets = new List<TelemetryPacket<int>>
+{
+    new TelemetryPacket<int>(2, "Power", 120),
+    new TelemetryPacket<int>(2, "Power", 150),
+    new TelemetryPacket<int>(2, "Power", 180)
+};
+
+            List<TelemetryPacket<bool>> switchPackets = new List<TelemetryPacket<bool>>
+{
+    new TelemetryPacket<bool>(3, "Smart Switch", true),
+    new TelemetryPacket<bool>(3, "Smart Switch", false),
+    new TelemetryPacket<bool>(3, "Smart Switch", true)
+};
+
+            ViewBag.TemperaturePackets = temperaturePackets;
+            ViewBag.PowerPackets = powerPackets;
+            ViewBag.SwitchPackets = switchPackets;
+
+            return View();
+
+
+}
+
     }
 
 }
