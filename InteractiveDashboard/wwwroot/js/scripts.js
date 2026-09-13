@@ -1,8 +1,6 @@
 ﻿
 
-// ---------- CHARTS ----------
 
-// BAR CHART
 const barChartOptions = {
     series: [
         {
@@ -113,7 +111,7 @@ const barChart = new ApexCharts(
 );
 barChart.render();
 
-// AREA CHART
+
 const areaChartOptions = {
     series: [
         {
