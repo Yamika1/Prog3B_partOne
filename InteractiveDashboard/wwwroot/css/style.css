@@ -297,7 +297,7 @@
         grid-template-columns: 1fr;
     }
 
-    ```
+    
 }
 
 @media screen and (max-width: 768px) {
@@ -305,7 +305,7 @@
         padding: 20px;
     }
 
-    ```
+    
     .main-cards {
         grid-template-columns: 1fr;
         gap: 15px;
@@ -403,5 +403,5 @@
         margin: 2px;
     }
 
-    
+   
 }
