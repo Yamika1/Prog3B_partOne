@@ -1,0 +1,110 @@
+﻿@model InteractiveDashboard.Models.SensorPayload
+
+@{
+    ViewData["Title"] = "Upload File";
+}
+
+<div class="container-fluid">
+
+   
+    <div class="main-title">
+        <div>
+            <h2>UPLOAD FILE</h2>
+            <p>Upload a file or picture for this sensor.</p>
+        </div>
+    </div>
+
+    <div class="sensor-details-card">
+
+        <div class="details-header">
+            <span class="material-icons-outlined">sensors</span>
+            <h3>Sensor Information</h3>
+        </div>
+
+        <div class="details-grid">
+
+            <div class="detail-item">
+                <span>Device ID</span>
+                <strong>@Model.DeviceID</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>MAC Address</span>
+                <strong>@Model.MAC_Address</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Deployment Location</span>
+                <strong>@Model.Deployment_Location</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Category</span>
+                <strong>@Model.Category</strong>
+            </div>
+
+            <div class="detail-item">
+                <span>Sensor Value</span>
+                <strong>@Model.SensorValue</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="sensor-details-card">
+
+        <div class="details-header">
+            <span class="material-icons-outlined">upload_file</span>
+            <h3>Select File</h3>
+        </div>
+
+        <form asp-action="Upload"
+              asp-route-id="@Model.Id"
+              method="post"
+              enctype="multipart/form-data">
+
+            <div class="form-group mb-4">
+
+                <label for="file" class="form-label">
+                    Select File or Picture
+                </label>
+
+                <input type="file"
+                       name="file"
+                       id="file"
+                       class="form-control"
+                       accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx"
+                       required />
+
+                <span class="text-danger">
+                    @Html.ValidationMessage("file")
+                </span>
+
+                <small class="form-text">
+                    Allowed files: JPG, JPEG, PNG, GIF, PDF, DOC and DOCX.
+                </small>
+
+            </div>
+
+            <div class="details-actions">
+
+                <button type="submit" class="btn btn-success">
+                    <span class="material-icons-outlined">cloud_upload</span>
+                    Upload File
+                </button>
+
+                <a asp-action="Details"
+                   asp-route-id="@Model.Id"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+   
+
+</div>
