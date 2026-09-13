@@ -1,7 +1,7 @@
 ﻿const barChartOptions = {
     series: [
         {
-            data: [10, 8, 6, 4, 2],
+            data: [10, 8, 6, 4],
             name: 'Sensors'
         }
     ],
@@ -20,7 +20,6 @@ colors: [
     '#2962ff',
     '#d50000',
     '#2e7d32',
-    '#ff6d00',
     '#583cb3'
 ],
 
