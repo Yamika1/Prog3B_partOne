@@ -61,7 +61,7 @@ const barChartOptions = {
         theme: 'dark',
     },
     xaxis: {
-        categories: ['Laptop', 'Phone', 'Monitor', 'Headphones', 'Camera'],
+        categories: ['Temperature Sensors', 'Pressure Sensors', 'Touch Sensors', 'Proximity and Motion Sensors'],
         title: {
             style: {
                 color: '#f5f7ff',
