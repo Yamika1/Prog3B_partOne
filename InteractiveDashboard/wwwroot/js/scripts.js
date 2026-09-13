@@ -279,6 +279,7 @@ tooltip: {
 
 };
 
+
 const areaChartElement = document.querySelector('#area-chart');
 
 if (areaChartElement) {
