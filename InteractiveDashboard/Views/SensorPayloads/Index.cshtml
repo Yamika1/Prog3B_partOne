@@ -1,52 +1,37 @@
 ﻿@model List<InteractiveDashboard.Models.SensorPayload>
 
 @{
-    ViewData["Title"] = "Sensor Dashboard";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="container-fluid">
+<div class="dashboard-container">
 
-   
-    <div class="main-title">
-        <div>
-            <h2>SENSOR DASHBOARD</h2>
-            <p>Monitor and manage your sensor payloads.</p>
-        </div>
-    </div>
+    
+    <div class="dashboard-header">
+        <h1>DASHBOARD</h1>
 
-    <div class="d-flex justify-content-end mb-4">
-
-        <a asp-action="Create"
-           class="btn btn-success">
-
-            <span class="material-icons-outlined">
-                add
-            </span>
-
+        <a asp-action="Create" class="add-sensor-btn">
+            <span class="material-icons-outlined">add</span>
             Add Sensor
         </a>
-
     </div>
 
     <div class="main-cards">
 
-        <div class="card">
-
-            <div class="card-inner">
-                <h3>TOTAL SENSORS</h3>
+        <div class="dashboard-card sensors-card">
+            <div class="dashboard-card-top">
+                <h3>SENSORS</h3>
 
                 <span class="material-icons-outlined">
                     sensors
                 </span>
             </div>
 
-            <h1>@ViewBag.TotalSensors</h1>
-
+            <h2>@ViewBag.TotalSensors</h2>
         </div>
 
-        <div class="card">
-
-            <div class="card-inner">
+        <div class="dashboard-card categories-card">
+            <div class="dashboard-card-top">
                 <h3>CATEGORIES</h3>
 
                 <span class="material-icons-outlined">
@@ -54,13 +39,11 @@
                 </span>
             </div>
 
-            <h1>@ViewBag.TotalCategories</h1>
-
+            <h2>@ViewBag.TotalCategories</h2>
         </div>
 
-        <div class="card">
-
-            <div class="card-inner">
+        <div class="dashboard-card locations-card">
+            <div class="dashboard-card-top">
                 <h3>LOCATIONS</h3>
 
                 <span class="material-icons-outlined">
@@ -68,13 +51,11 @@
                 </span>
             </div>
 
-            <h1>@ViewBag.TotalLocations</h1>
-
+            <h2>@ViewBag.TotalLocations</h2>
         </div>
 
-        <div class="card">
-
-            <div class="card-inner">
+        <div class="dashboard-card alerts-card">
+            <div class="dashboard-card-top">
                 <h3>ALERTS</h3>
 
                 <span class="material-icons-outlined">
@@ -82,194 +63,136 @@
                 </span>
             </div>
 
-            <h1>0</h1>
+            <h2>0</h2>
+        </div>
+
+    </div>
+
+    <div class="dashboard-charts">
+
+        <div class="dashboard-chart-card">
+
+            <h2>Sensor Categories</h2>
+
+            <div id="bar-chart"></div>
+
+        </div>
+
+        <div class="dashboard-chart-card">
+
+            <h2>Sensor Readings</h2>
+
+            <div id="area-chart"></div>
 
         </div>
 
     </div>
 
-    <div class="charts">
+    <div class="sensor-table-card">
 
-        <div class="charts-card">
+        <div class="table-header">
 
-            <h2 class="chart-title">
-                Sensor Payloads
-            </h2>
-
-            <div class="table-responsive">
-
-                <table class="table table-bordered table-striped">
-
-                    <thead>
-                        <tr>
-                            <th>Device ID</th>
-                            <th>MAC Address</th>
-                            <th>Deployment Location</th>
-                            <th>Category</th>
-                            <th>Sensor Value</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        @if (Model != null && Model.Any())
-                        {
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-
-                                    <td>
-                                        @item.DeviceID
-                                    </td>
-
-                                    <td>
-                                        @item.MAC_Address
-                                    </td>
-
-                                    <td>
-                                        @item.Deployment_Location
-                                    </td>
-
-                                    <td>
-                                        @item.Category
-                                    </td>
-
-                                    <td>
-                                        @item.SensorValue
-                                    </td>
-
-                                    <td>
-
-                                        <a asp-action="Details"
-                                           asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-info">
-                                            Details
-                                        </a>
-
-                                        <a asp-action="Edit"
-                                           asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-primary">
-                                            Edit
-                                        </a>
-
-                                        <a asp-action="Delete"
-                                           asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-danger">
-                                            Delete
-                                        </a>
-
-                                        <a asp-action="Upload"
-                                           asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-success">
-                                            Upload
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="6"
-                                    class="text-center">
-
-                                    No sensors have been added yet.
-
-                                </td>
-                            </tr>
-                        }
-
-                    </tbody>
-
-                </table>
-
+            <div>
+                <h2>Sensor Payloads</h2>
+                <p>Manage your sensor records</p>
             </div>
+
+            <a asp-action="Create" class="add-table-btn">
+                <span class="material-icons-outlined">add</span>
+                Add Sensor
+            </a>
 
         </div>
 
-        <div class="charts-card">
+        <div class="table-responsive">
 
-            <h2 class="chart-title">
-                Sensor Overview
-            </h2>
+            <table class="sensor-table">
 
-            <div class="sensor-overview">
+                <thead>
+                    <tr>
+                        <th>Device ID</th>
+                        <th>MAC Address</th>
+                        <th>Location</th>
+                        <th>Category</th>
+                        <th>Sensor Value</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-                <div class="overview-item">
+                <tbody>
 
-                    <span class="material-icons-outlined">
-                        devices
-                    </span>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
 
-                    <div>
-                        <h3>Devices</h3>
+                                <td>@item.DeviceID</td>
 
-                        <p>
-                            @Model.Select(x => x.DeviceID)
-                            .Where(x => !string.IsNullOrEmpty(x))
-                            .Distinct()
-                            .Count()
-                            Connected
-                        </p>
-                    </div>
+                                <td>@item.MAC_Address</td>
 
-                </div>
+                                <td>@item.Deployment_Location</td>
 
-                <div class="overview-item">
+                                <td>
+                                    <span class="category-badge">
+                                        @item.Category
+                                    </span>
+                                </td>
 
-                    <span class="material-icons-outlined">
-                        sensors
-                    </span>
+                                <td class="sensor-value">
+                                    @item.SensorValue
+                                </td>
 
-                    <div>
-                        <h3>Sensor Readings</h3>
+                                <td>
 
-                        <p>
-                            @Model.Count Recorded
-                        </p>
-                    </div>
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="action-btn details-btn">
+                                        Details
+                                    </a>
 
-                </div>
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="action-btn edit-btn">
+                                        Edit
+                                    </a>
 
-                <div class="overview-item">
+                                    <a asp-action="Upload"
+                                       asp-route-id="@item.Id"
+                                       class="action-btn upload-btn">
+                                        Upload
+                                    </a>
 
-                    <span class="material-icons-outlined">
-                        location_on
-                    </span>
+                                </td>
 
-                    <div>
-                        <h3>Deployment Locations</h3>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="empty-table">
+                                No sensors have been added yet.
+                            </td>
+                        </tr>
+                    }
 
-                        <p>
-                            @ViewBag.TotalLocations Locations
-                        </p>
-                    </div>
+                </tbody>
 
-                </div>
-
-                <div class="overview-item">
-
-                    <span class="material-icons-outlined">
-                        category
-                    </span>
-
-                    <div>
-                        <h3>Sensor Categories</h3>
-
-                        <p>
-                            @ViewBag.TotalCategories Categories
-                        </p>
-                    </div>
-
-                </div>
-
-            </div>
+            </table>
 
         </div>
 
     </div>
     
+
 </div>
+
+@section Scripts {
+
+   
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="~/js/scripts.js"></script>
+   
+
+}
