@@ -5,7 +5,7 @@ var connectionString = builder.Configuration.GetConnectionString("InteractiveDas
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("InteractiveDashboardContext")));
+        builder.Configuration.GetConnectionString("ApplicationDbContext")));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
