@@ -4,6 +4,24 @@
     ViewData["Title"] = "Sensor Details";
 }
 
+<div class="details-actions">
+
+      
+
+    <a asp-action="Upload"
+       asp-route-id="@Model.Id"
+       class="btn btn-success">
+
+        Upload File
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+
+        Back to Sensors
+    </a>
+
+</div>
 <div class="container-fluid">
 
     <div class="main-title">
@@ -82,11 +100,7 @@
                             </div>
                         </div>
 
-                        <a href="@file.FilePath"
-                           target="_blank"
-                           class="btn btn-sm btn-primary">
-                            View File
-                        </a>
+                     
 
                     </div>
                 }
@@ -102,24 +116,7 @@
 
     </div>
 
-    <div class="details-actions">
-
-      
-
-        <a asp-action="Upload"
-           asp-route-id="@Model.Id"
-           class="btn btn-success">
-          
-            Upload File
-        </a>
-
-        <a asp-action="Index"
-           class="btn btn-secondary">
-         
-            Back to Sensors
-        </a>
-
-    </div>
+   
    
 
 </div>
