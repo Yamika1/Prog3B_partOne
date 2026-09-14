@@ -2,38 +2,47 @@
 using InteractiveDashboard.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 
 namespace InteractiveDashboard.Controllers
 {
     public class SensorPayloadsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public SensorPayloadsController(ApplicationDbContext context)
-        {
-            _context = context;
+        public SensorPayloadsController(IHttpClientFactory httpClientFactory) { 
+            
+            _httpClientFactory = httpClientFactory; 
+        
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<SensorPayload> sensors =
-                await _context.SensorPayloads.ToListAsync();
-
+            var client = _httpClientFactory.CreateClient("SensorApi"); 
+           
+            var response = await client.GetAsync("SensorPayloads"); 
+           
+            if (!response.IsSuccessStatusCode) {
+             
+                return View(new List<SensorPayload>());
+           
+            }
+           
+            var json = await response.Content.ReadAsStringAsync(); 
+            
+            var sensors = JsonSerializer.Deserialize<List<SensorPayload>>(json, new JsonSerializerOptions { 
+               
+                PropertyNameCaseInsensitive = true }) ?? new List<SensorPayload>(); 
+            
             ViewBag.TotalSensors = CountSensors(sensors, 0);
-
-            ViewBag.TotalCategories = sensors
-                .Where(x => !string.IsNullOrEmpty(x.Category))
-                .Select(x => x.Category)
-                .Distinct()
-                .Count();
-
-            ViewBag.TotalLocations = sensors
-                .Where(x => !string.IsNullOrEmpty(x.Deployment_Location))
-                .Select(x => x.Deployment_Location)
-                .Distinct()
-                .Count();
-
+          
+            ViewBag.TotalCategories = sensors.Where(x => !string.IsNullOrEmpty(x.Category)).Select(x => x.Category).Distinct().Count(); 
+           
+            ViewBag.TotalLocations = sensors.Where(x => !string.IsNullOrEmpty(x.Deployment_Location)).Select(x => x.Deployment_Location).Distinct().Count(); 
+           
             return View(sensors);
         }
 
@@ -64,10 +73,20 @@ namespace InteractiveDashboard.Controllers
                 return View(sensorpayload);
             }
 
-            _context.SensorPayloads.Add(sensorpayload);
-
-            await _context.SaveChangesAsync();
-
+            var client = _httpClientFactory.CreateClient("SensorApi"); 
+          
+            var json = JsonSerializer.Serialize(sensorpayload); 
+          
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+          
+            var response = await client.PostAsync("SensorPayloads", content); if (!response.IsSuccessStatusCode) { 
+              
+                ModelState.AddModelError("", "Unable to add the sensor through the API.");
+              
+                return View(sensorpayload); 
+           
+            }
+          
             return RedirectToAction(nameof(Index));
         }
 
@@ -79,30 +98,46 @@ namespace InteractiveDashboard.Controllers
                 return NotFound();
             }
 
-            var sensorPayload = await _context.SensorPayloads
-                .Include(x => x.Files)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (sensorPayload == null)
-            {
-                return NotFound();
+            var client = _httpClientFactory.CreateClient("SensorApi");
+            
+            var response = await client.GetAsync($"SensorPayloads/{id}"); 
+            if (!response.IsSuccessStatusCode) { 
+                return NotFound(); 
             }
 
-            return View(sensorPayload);
+            var json = await response.Content.ReadAsStringAsync();
+            var sensor = JsonSerializer.Deserialize<SensorPayload>(json, new JsonSerializerOptions { 
+                PropertyNameCaseInsensitive = true }); 
+            if (sensor == null) { 
+                return NotFound(); 
+            }
+            var filesResponse = await client.GetAsync($"SensorPayloads/{id}/files"); 
+            if (filesResponse.IsSuccessStatusCode) {
+                var filesJson = await filesResponse.Content.ReadAsStringAsync(); 
+                var files = JsonSerializer.Deserialize<List<SensorPayloadFile>>(filesJson, new JsonSerializerOptions { 
+                    PropertyNameCaseInsensitive = true }); 
+                sensor.Files = files ?? new List<SensorPayloadFile>();
+            }
+            return View(sensor);
         }
 
         [HttpGet]
         public async Task<IActionResult> Upload(int id)
         {
-            var sensor = await _context.SensorPayloads
-                .Include(x => x.Files)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (sensor == null)
-            {
+            var client = _httpClientFactory.CreateClient("SensorApi"); 
+            
+            var response = await client.GetAsync($"SensorPayloads/{id}"); 
+            
+            if (!response.IsSuccessStatusCode) { 
                 return NotFound();
             }
 
+            var json = await response.Content.ReadAsStringAsync();
+            var sensor = JsonSerializer.Deserialize<SensorPayload>(json, new JsonSerializerOptions { 
+                PropertyNameCaseInsensitive = true }); 
+            if (sensor == null) { 
+                return NotFound();
+            }
             return View(sensor);
         }
 
@@ -110,99 +145,32 @@ namespace InteractiveDashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(int id, IFormFile file)
         {
-            var sensor = await _context.SensorPayloads
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (sensor == null)
-            {
-                return NotFound();
+            if (file == null || file.Length == 0) { 
+          
+                ModelState.AddModelError("file", "Please select a file."); 
+                return RedirectToAction(nameof(Upload), new { id });
             }
+            var client = _httpClientFactory.CreateClient("SensorApi"); 
 
-            if (file == null || file.Length == 0)
-            {
-                ModelState.AddModelError(
-                    "file",
-                    "Please select a file.");
+            using var form = new MultipartFormDataContent(); 
 
-                return View(sensor);
+            using var stream = file.OpenReadStream();
+
+            using var fileContent = new StreamContent(stream); 
+
+            fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType); 
+            form.Add(fileContent, "file", file.FileName); 
+
+            var response = await client.PostAsync($"SensorPayloads/{id}/upload", form); 
+            if (!response.IsSuccessStatusCode) { 
+
+                var error = await response.Content.ReadAsStringAsync(); 
+
+                ModelState.AddModelError("file", error); 
+
+                return RedirectToAction(nameof(Upload), new { id }); 
             }
-
-            const long maxFileSize = 10 * 1024 * 1024;
-
-            if (file.Length > maxFileSize)
-            {
-                ModelState.AddModelError(
-                    "file",
-                    "The file size cannot exceed 10 MB.");
-
-                return View(sensor);
-            }
-
-            var allowedExtensions = new[]
-            {
-            ".jpg",
-            ".jpeg",
-            ".png",
-            ".gif",
-            ".pdf",
-            ".doc",
-            ".docx"
-        };
-
-            var extension = Path
-                .GetExtension(file.FileName)
-                .ToLowerInvariant();
-
-            if (!allowedExtensions.Contains(extension))
-            {
-                ModelState.AddModelError(
-                    "file",
-                    "Only JPG, JPEG, PNG, GIF, PDF, DOC and DOCX files are allowed.");
-
-                return View(sensor);
-            }
-
-            var uploadsFolder = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "wwwroot",
-                "uploads",
-                "sensors");
-
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var uniqueFileName =
-                Path.GetRandomFileName() + extension;
-
-            var filePath = Path.Combine(
-                uploadsFolder,
-                uniqueFileName);
-
-            using (var stream = new FileStream(
-                filePath,
-                FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var sensorFile = new SensorPayloadFile
-            {
-                FileName = Path.GetFileName(file.FileName),
-                FilePath = "/uploads/sensors/" + uniqueFileName,
-                FileSize = file.Length,
-                UploadedDate = DateTime.UtcNow,
-                SensorPayloadId = sensor.Id
-            };
-
-            _context.SensorPayloadFiles.Add(sensorFile);
-
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(
-                nameof(Details),
-                new { id = sensor.Id });
+            return RedirectToAction(nameof(Details), new { id });
         }
         [HttpGet] public IActionResult Telemetry() { 
             
@@ -237,50 +205,40 @@ namespace InteractiveDashboard.Controllers
         [HttpGet]
         public async Task<IActionResult> Add(int id1, int id2)
         {
-            var sensor1 =
-                await _context.SensorPayloads.FindAsync(id1);
-
-            var sensor2 =
-                await _context.SensorPayloads.FindAsync(id2);
-
-            if (sensor1 == null || sensor2 == null)
-            {
+            var client = _httpClientFactory.CreateClient("SensorApi"); 
+            
+            var response = await client.GetAsync($"SensorPayloads/add/{id1}/{id2}"); 
+            if (!response.IsSuccessStatusCode) {
                 return NotFound();
             }
-
-            var result = sensor1 + sensor2;
-
-            ViewBag.Result = result.SensorValue;
-            ViewBag.Operation = "Addition";
-            ViewBag.Sensor1 = sensor1.SensorValue;
-            ViewBag.Sensor2 = sensor2.SensorValue;
-
+            var json = await response.Content.ReadAsStringAsync();
+            using var document = JsonDocument.Parse(json); 
+            ViewBag.Operation = document.RootElement.GetProperty("operation").GetString(); 
+            ViewBag.Sensor1 = document.RootElement.GetProperty("sensor1").GetDouble(); 
+            ViewBag.Sensor2 = document.RootElement.GetProperty("sensor2").GetDouble(); 
+            ViewBag.Result = document.RootElement.GetProperty("result").GetDouble(); 
+            
             return View("Calculation");
         }
-
         [HttpGet]
         public async Task<IActionResult> Subtract(int id1, int id2)
         {
-            var sensor1 =
-                await _context.SensorPayloads.FindAsync(id1);
-
-            var sensor2 =
-                await _context.SensorPayloads.FindAsync(id2);
-
-            if (sensor1 == null || sensor2 == null)
-            {
-                return NotFound();
+            var client = _httpClientFactory.CreateClient("SensorApi"); 
+            
+            var response = await client.GetAsync($"SensorPayloads/subtract/{id1}/{id2}");
+            
+            if (!response.IsSuccessStatusCode) { 
+                return NotFound(); 
             }
-
-            var result = sensor1 - sensor2;
-
-            ViewBag.Result = result.SensorValue;
-            ViewBag.Operation = "Subtraction";
-            ViewBag.Sensor1 = sensor1.SensorValue;
-            ViewBag.Sensor2 = sensor2.SensorValue;
-
+            var json = await response.Content.ReadAsStringAsync(); 
+            using var document = JsonDocument.Parse(json); 
+            ViewBag.Operation = document.RootElement.GetProperty("operation").GetString(); 
+            ViewBag.Sensor1 = document.RootElement.GetProperty("sensor1").GetDouble(); 
+            ViewBag.Sensor2 = document.RootElement.GetProperty("sensor2").GetDouble(); 
+            ViewBag.Result = document.RootElement.GetProperty("result").GetDouble(); 
+            
             return View("Calculation");
-        }
+        } 
 
         private List <TelemetryPacket<T>> ProcessTelemetry<T>(
             List<TelemetryPacket<T>> packets)

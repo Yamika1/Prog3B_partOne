@@ -9,6 +9,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddHttpClient("SensorApi", client =>
+{
+    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
+
+    if (string.IsNullOrWhiteSpace(apiBaseUrl))
+    {
+        throw new InvalidOperationException(
+            "ApiSettings:BaseUrl is not configured.");
+    }
+
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

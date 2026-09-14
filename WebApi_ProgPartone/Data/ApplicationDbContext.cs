@@ -11,6 +11,7 @@ namespace WebApi_ProgPartone.Data
 
         }
         public DbSet<SensorPayload> SensorPayloads { get; set; }
+        public DbSet<SensorPayloadFile> SensorPayloadFile { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
